@@ -12,7 +12,8 @@ readExpr input = case (parse parseExpr "lisp" input) of
   Right val -> val
 
 parseExpr :: Parser LispVal
-parseExpr = parseAtom
+parseExpr = parseBool
+        <|> parseAtom
         <|> parseList
         <|> parseNumber
 
@@ -36,3 +37,12 @@ parseList = do {
 
 parseNumber :: Parser LispVal
 parseNumber = many1 digit >>= return . Number . read
+
+parseBool :: Parser LispVal
+parseBool = (try parseTrue) <|> (try parseFalse)
+
+parseTrue :: Parser LispVal
+parseTrue = string "#t" >> return (Bool True)
+
+parseFalse :: Parser LispVal
+parseFalse = string "#f" >> return (Bool False)
