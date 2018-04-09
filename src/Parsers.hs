@@ -14,6 +14,7 @@ readExpr input = case (parse parseExpr "lisp" input) of
 parseExpr :: Parser LispVal
 parseExpr = parseAtom
         <|> parseList
+        <|> parseNumber
 
 symbol :: Parser Char
 symbol = oneOf "!#$%&|*+-/:<=>?@^_~"
@@ -32,3 +33,6 @@ parseList = do {
     char ')';
     return $ List xs;
 }
+
+parseNumber :: Parser LispVal
+parseNumber = many1 digit >>= return . Number . read
