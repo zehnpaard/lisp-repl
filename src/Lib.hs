@@ -1,24 +1,29 @@
 module Lib
-    ( readPrompt, readEvalPrint, loopUntil
+    ( readEvalPrintLoop
     ) where
 
 import System.Environment
 import System.IO
 import Control.Monad
 
+import Environment
 import Parsers
 import Evaluator
 
 readPrompt :: String -> IO String
 readPrompt prompt = putStr prompt >> hFlush stdout >> getLine
 
-readEvalPrint :: String -> IO()
-readEvalPrint = putStrLn . show . eval . readExpr
+readEvalPrint :: Env -> String -> IO ()
+readEvalPrint env str = (eval env $ readExpr str) >>= putStrLn . show
 
 loopUntil :: (a -> Bool) -> IO a -> (a -> IO ()) -> IO ()
 loopUntil pred prompt action = do {
-    x <- prompt;
-    if pred x
+    input <- prompt;
+    if pred input 
       then return ()
-      else (action x >> loopUntil pred prompt action)
+      else (action input >> loopUntil pred prompt action)
 }
+
+readEvalPrintLoop :: IO ()
+readEvalPrintLoop = nullEnv >>=
+                    loopUntil (== "quit") (readPrompt ">> ") . readEvalPrint
