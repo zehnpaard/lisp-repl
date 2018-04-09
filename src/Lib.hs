@@ -6,7 +6,6 @@ import System.Environment
 import System.IO
 import Control.Monad
 
-import LispVal
 import Parsers
 import Evaluator
 
