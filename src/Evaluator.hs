@@ -4,8 +4,9 @@ import LispVal
 import Environment
 import Functions
 import Variables
+import IOThrowable
 
-eval :: EnvRef -> LispVal -> IO LispVal
+eval :: EnvRef -> LispVal -> IOThrowable LispVal
 eval envRef (Atom var) = getVar envRef var
 eval envRef (List [Atom "if", ifForm, thenForm, elseForm]) = do {
     ifBool <- eval envRef ifForm;

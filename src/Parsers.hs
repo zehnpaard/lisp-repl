@@ -3,13 +3,16 @@ module Parsers
     ) where
 
 import Text.ParserCombinators.Parsec
+import Control.Monad.Except
 
 import LispVal
+import LispError
+import IOThrowable
 
-readExpr :: String -> LispVal
+readExpr :: String -> IOThrowable LispVal
 readExpr input = case (parse parseExpr "lisp" input) of
-  Left err  -> Atom $ "No match: " ++ show err
-  Right val -> val
+  Left err  -> throwError $ ParserError err
+  Right val -> return val
 
 parseExpr :: Parser LispVal
 parseExpr = parseBool

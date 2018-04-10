@@ -5,16 +5,21 @@ module Lib
 import System.Environment
 import System.IO
 import Control.Monad
+import Control.Monad.Except
 
 import Environment
 import Parsers
 import Evaluator
+import IOThrowable
 
 readPrompt :: String -> IO String
 readPrompt prompt = putStr prompt >> hFlush stdout >> getLine
 
 readEvalPrint :: EnvRef -> String -> IO ()
-readEvalPrint envRef str = (eval envRef $ readExpr str) >>= putStrLn . show
+readEvalPrint envRef str = do {
+    output <- runIOThrowable (readExpr str >>= eval envRef >>= liftIO . return . show);
+    putStrLn output;
+}
 
 loopUntil :: (a -> Bool) -> IO a -> (a -> IO ()) -> IO ()
 loopUntil pred prompt action = do {
