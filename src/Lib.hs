@@ -13,8 +13,8 @@ import Evaluator
 readPrompt :: String -> IO String
 readPrompt prompt = putStr prompt >> hFlush stdout >> getLine
 
-readEvalPrint :: Env -> String -> IO ()
-readEvalPrint env str = (eval env $ readExpr str) >>= putStrLn . show
+readEvalPrint :: EnvRef -> String -> IO ()
+readEvalPrint envRef str = (eval envRef $ readExpr str) >>= putStrLn . show
 
 loopUntil :: (a -> Bool) -> IO a -> (a -> IO ()) -> IO ()
 loopUntil pred prompt action = do {
@@ -25,5 +25,5 @@ loopUntil pred prompt action = do {
 }
 
 readEvalPrintLoop :: IO ()
-readEvalPrintLoop = nullEnv >>=
+readEvalPrintLoop = nullEnvRef >>=
                     loopUntil (== "quit") (readPrompt ">> ") . readEvalPrint

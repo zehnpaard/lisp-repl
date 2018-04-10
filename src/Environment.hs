@@ -1,10 +1,10 @@
-module Environment (Env, nullEnv) where
+module Environment (EnvRef, nullEnvRef) where
 
 import Data.IORef
 
 import LispVal
 
-type Env = IORef [(String, IORef LispVal)]
+type EnvRef = IORef [(String, IORef LispVal)]
 
-nullEnv :: IO Env
-nullEnv = newIORef []
+nullEnvRef :: IO EnvRef
+nullEnvRef = newIORef []
