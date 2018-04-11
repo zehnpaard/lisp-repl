@@ -38,7 +38,7 @@ numBoolBinOp op [x, y] = do {
     b <- lvToInteger y;
     return $ Bool $ op a b;
 }
-numBoolBinOp op _      = return $ Bool False
+numBoolBinOp op args   = throwError $ NumArgError 2 args
 
 boolBoolBinOp :: (Bool -> Bool -> Bool) -> [LispVal] -> Throwable LispVal
 boolBoolBinOp op args = mapM lvToBool args >>= return . Bool . foldl1 op 

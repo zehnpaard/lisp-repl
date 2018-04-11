@@ -9,6 +9,7 @@ data LispError = ParserError ParseError
                | BadFormError LispVal
                | NotFunction String
                | TypeMismatch String LispVal
+               | NumArgError Integer [LispVal]
 
 instance Show LispError where show = showError
 
@@ -18,3 +19,6 @@ showError (UnboundVar var) = "Unrecognized variable: " ++ var
 showError (BadFormError form) = "Cannot evaluate form: " ++ show form
 showError (NotFunction func) = "Unrecognized function: " ++ func
 showError (TypeMismatch t v) = "Type mismatch: expected " ++ t ++ ", found " ++ show v
+showError (NumArgError n args) = "Incorrect number of arguments: "
+                                    ++ "expected " ++ show n 
+                                    ++ ", found args " ++ (unwords $ map show args)
