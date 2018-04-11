@@ -4,6 +4,7 @@ import Data.IORef
 import Control.Monad.Except
 
 import LispVal
+import LispError
 import Environment
 import IOThrowable
 
@@ -13,14 +14,15 @@ isBound envRef var = readIORef envRef >>=
                      return . maybe False (const True)
 
 getVar :: EnvRef -> String -> IOThrowable LispVal
-getVar envRef var = liftIO $ readIORef envRef >>=
-                    return . lookup var >>=
-                    maybe (return $ Bool False) (liftIO . readIORef)
+getVar envRef var = do {
+    env <- liftIO $ readIORef envRef;
+    maybe (throwError $ UnboundVar var) (liftIO . readIORef) (lookup var env);
+}
 
 setVar :: EnvRef -> String -> LispVal -> IOThrowable LispVal
 setVar envRef var val = do {
     env <- liftIO $ readIORef envRef;
-    liftIO $ maybe (return ()) (flip writeIORef val) (lookup var env);
+    maybe (throwError $ UnboundVar var) (liftIO . flip writeIORef val) (lookup var env);
     return val;
 }
 
