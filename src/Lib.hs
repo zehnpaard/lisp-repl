@@ -10,7 +10,7 @@ import Control.Monad.Except
 import CoreDataTypes
 import Parsers
 import Evaluator
-import Functions
+import Primitives
 
 readPrompt :: String -> IO String
 readPrompt prompt = putStr prompt >> hFlush stdout >> getLine

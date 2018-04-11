@@ -3,7 +3,7 @@ module Evaluator (eval) where
 import Control.Monad.Except
 
 import CoreDataTypes
-import Functions
+import Apply
 import Variables
 
 eval :: EnvRef -> LispVal -> IOThrowable LispVal
