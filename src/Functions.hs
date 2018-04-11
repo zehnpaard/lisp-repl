@@ -2,10 +2,16 @@ module Functions
     ( apply
     ) where
 
-import LispVal
+import Control.Monad.Except
 
-apply :: String -> [LispVal] -> LispVal
-apply funcName args = maybe (Number 0) ($ args) (lookup funcName primitives)
+import LispVal
+import LispError
+import IOThrowable
+
+apply :: String -> [LispVal] -> Throwable LispVal
+apply funcName args = maybe (throwError $ NotFunction funcName) 
+                            (return . ($ args))
+                            (lookup funcName primitives)
 
 primitives :: [(String, [LispVal] -> LispVal)]
 primitives = [

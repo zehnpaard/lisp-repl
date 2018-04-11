@@ -21,5 +21,5 @@ eval envRef (List [Atom "if", ifForm, thenForm, elseForm]) = do {
 }
 eval envRef (List [Atom "set!", Atom var, form]) = eval envRef form >>= setVar envRef var 
 eval envRef (List [Atom "define", Atom var, form]) = eval envRef form >>= defineVar envRef var
-eval envRef (List (Atom funcName : args)) = mapM (eval envRef) args >>= return . apply funcName
+eval envRef (List (Atom funcName : args)) = mapM (eval envRef) args >>= liftThrowable . apply funcName
 eval envRef badForm = throwError $ BadFormError badForm
