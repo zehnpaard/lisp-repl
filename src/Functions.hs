@@ -4,9 +4,7 @@ module Functions
 
 import Control.Monad.Except
 
-import LispVal
-import LispError
-import IOThrowable
+import CoreDataTypes
 
 apply :: String -> [LispVal] -> Throwable LispVal
 apply funcName args = maybe (throwError $ NotFunction funcName) 

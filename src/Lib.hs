@@ -7,10 +7,9 @@ import System.IO
 import Control.Monad
 import Control.Monad.Except
 
-import Environment
+import CoreDataTypes
 import Parsers
 import Evaluator
-import IOThrowable
 
 readPrompt :: String -> IO String
 readPrompt prompt = putStr prompt >> hFlush stdout >> getLine

@@ -3,10 +3,7 @@ module Variables (getVar, setVar, defineVar) where
 import Data.IORef
 import Control.Monad.Except
 
-import LispVal
-import LispError
-import Environment
-import IOThrowable
+import CoreDataTypes
 
 isBound :: EnvRef -> String -> IO Bool
 isBound envRef var = readIORef envRef >>=

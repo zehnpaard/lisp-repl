@@ -5,9 +5,7 @@ module Parsers
 import Text.ParserCombinators.Parsec
 import Control.Monad.Except
 
-import LispVal
-import LispError
-import IOThrowable
+import CoreDataTypes
 
 readExpr :: String -> IOThrowable LispVal
 readExpr input = case (parse parseExpr "lisp" input) of

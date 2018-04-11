@@ -2,12 +2,9 @@ module Evaluator (eval) where
 
 import Control.Monad.Except
 
-import LispVal
-import LispError
-import Environment
+import CoreDataTypes
 import Functions
 import Variables
-import IOThrowable
 
 eval :: EnvRef -> LispVal -> IOThrowable LispVal
 eval envRef var@(Number _) = return var

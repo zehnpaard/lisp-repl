@@ -1,4 +1,4 @@
-module LispVal
+module CoreDataTypes
     ( LispVal (..),
       LispError (..),
       EnvRef,
