@@ -15,7 +15,7 @@ eval envRef (List [Atom "if", ifForm, thenForm, elseForm]) = do {
     ifBool <- eval envRef ifForm;
     case ifBool of
         Bool True  -> eval envRef thenForm
-        Bool False -> eval envRef elseForm
+        _          -> eval envRef elseForm
 }
 eval envRef (List [Atom "set!", Atom var, form]) = eval envRef form >>= setVar envRef var 
 eval envRef (List [Atom "define", Atom var, form]) = eval envRef form >>= defineVar envRef var
