@@ -20,6 +20,7 @@ data LispVal = Atom String
              | List [LispVal]
              | Number Integer
              | Bool Bool
+             | PrimitiveFunc ([LispVal] -> Throwable LispVal)
 
 instance Show LispVal where show = showVal
 
@@ -29,6 +30,7 @@ showVal (List contents) = "(" ++ (unwords $ map show contents) ++ ")"
 showVal (Number n) = show n
 showVal (Bool True) = "#t"
 showVal (Bool False) = "#f"
+showVal (PrimitiveFunc _) = "<primitive>"
 
 -- LispError
 data LispError = ParserError ParseError

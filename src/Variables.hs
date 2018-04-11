@@ -1,4 +1,4 @@
-module Variables (getVar, setVar, defineVar) where
+module Variables (getVar, setVar, defineVar, bindVars) where
 
 import Data.IORef
 import Control.Monad.Except
@@ -35,3 +35,9 @@ defineVar envRef var val = do {
             return val;
         }
 }
+
+bindVars :: EnvRef -> [(String, LispVal)] -> IO EnvRef
+bindVars envRef bindings = readIORef envRef >>= extendEnv bindings >>= newIORef
+  where extendEnv bindings env = liftM (++ env) (mapM addBindings bindings)
+        addBindings (var, val) = do ref <- newIORef val
+                                    return (var, ref)

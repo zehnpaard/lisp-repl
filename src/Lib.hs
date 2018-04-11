@@ -10,6 +10,7 @@ import Control.Monad.Except
 import CoreDataTypes
 import Parsers
 import Evaluator
+import Functions
 
 readPrompt :: String -> IO String
 readPrompt prompt = putStr prompt >> hFlush stdout >> getLine
@@ -29,5 +30,5 @@ loopUntil pred prompt action = do {
 }
 
 readEvalPrintLoop :: IO ()
-readEvalPrintLoop = nullEnvRef >>=
+readEvalPrintLoop = primitiveBindings >>=
                     loopUntil (== "quit") (readPrompt ">> ") . readEvalPrint

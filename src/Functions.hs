@@ -1,15 +1,23 @@
 module Functions
-    ( apply
+    ( apply,
+      primitives,
+      primitiveBindings
     ) where
 
 import Control.Monad.Except
 
 import CoreDataTypes
+import Variables
 
-apply :: String -> [LispVal] -> Throwable LispVal
-apply funcName args = maybe (throwError $ NotFunction funcName) 
-                            ($ args)
-                            (lookup funcName primitives)
+apply :: LispVal -> [LispVal] -> IOThrowable LispVal
+apply (PrimitiveFunc func) args = liftThrowable $ func args
+
+primitiveBindings :: IO EnvRef
+primitiveBindings = do 
+    let f (var, func) = (var, PrimitiveFunc func)
+    let pfs = map f primitives
+    envRef <- nullEnvRef
+    bindVars envRef pfs
 
 primitives :: [(String, [LispVal] -> Throwable LispVal)]
 primitives = [
