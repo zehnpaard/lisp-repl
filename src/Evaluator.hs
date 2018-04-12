@@ -17,6 +17,7 @@ eval envRef (List [Atom "if", ifForm, thenForm, elseForm]) = do {
         Bool True  -> eval envRef thenForm
         _          -> eval envRef elseForm
 }
+eval envRef var@(DottedList _ _) = return var
 eval envRef (List [Atom "set!", Atom var, form]) = eval envRef form >>= setVar envRef var 
 eval envRef (List [Atom "define", Atom var, form]) = eval envRef form >>= defineVar envRef var
 eval envRef (List (Atom "define" : List (Atom fname : params) : body)) =

@@ -18,6 +18,7 @@ import Text.ParserCombinators.Parsec
 -- LispVal
 data LispVal = Atom String
              | List [LispVal]
+             | DottedList [LispVal] LispVal
              | Number Integer
              | Bool Bool
              | PrimitiveFunc ([LispVal] -> Throwable LispVal)
@@ -28,6 +29,8 @@ instance Show LispVal where show = showVal
 showVal :: LispVal -> String
 showVal (Atom name) = name
 showVal (List contents) = "(" ++ (unwords $ map show contents) ++ ")"
+showVal (DottedList head tail) = "(" ++ (unwords $ map show head) 
+                                     ++ " . " ++ (show tail) ++ ")"
 showVal (Number n) = show n
 showVal (Bool True) = "#t"
 showVal (Bool False) = "#f"

@@ -15,7 +15,7 @@ readExpr input = case (parse parseExpr "lisp" input) of
 parseExpr :: Parser LispVal
 parseExpr = parseBool
         <|> parseAtom
-        <|> parseList
+        <|> parseListType
         <|> parseNumber
 
 symbol :: Parser Char
@@ -28,11 +28,26 @@ parseAtom = do {
     return $ Atom (first:rest);
 }
 
+parseListType :: Parser LispVal
+parseListType = do {
+    char '(';
+    list <- (try parseDottedList <|> parseList);
+    char ')';
+    return list;
+}
+
+parseDottedList :: Parser LispVal
+parseDottedList = do {
+    head <- endBy parseExpr (skipMany1 space);
+    char '.';
+    skipMany1 space;
+    tail <- parseExpr;
+    return $ DottedList head tail;
+}
+
 parseList :: Parser LispVal
 parseList = do {
-    char '(';
     xs <- sepBy parseExpr (skipMany1 space);
-    char ')';
     return $ List xs;
 }
 
