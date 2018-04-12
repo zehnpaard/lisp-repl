@@ -28,7 +28,8 @@ primitives = [
   ("or", boolBoolBinOp (||)),
   ("car", car),
   ("cdr", cdr),
-  ("cons", cons)
+  ("cons", cons),
+  ("eqv?", eqv)
   ]
 
 numBinOp :: (Integer -> Integer -> Integer) -> [LispVal] -> Throwable LispVal
@@ -71,3 +72,7 @@ cons [x, List xs] = return $ List (x:xs)
 cons [x, DottedList xs y] = return $ DottedList (x:xs) y
 cons [x, y] = return $ DottedList [x] y
 cons badArgs = throwError $ NumArgError 2 badArgs
+
+eqv :: [LispVal] -> Throwable LispVal
+eqv xs = return $ Bool (and (zipWith (==) ys (tail ys)))
+  where ys = map show xs
