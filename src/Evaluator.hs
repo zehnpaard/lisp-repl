@@ -12,6 +12,7 @@ eval envRef var@(Bool _) = return var
 eval envRef var@(PrimitiveFunc _) = return var
 eval envRef (Atom var) = getVar envRef var
 eval envRef (List [Atom "quote", val]) = return val
+eval envRef (List [Atom "eval", form]) = eval envRef form >>= eval envRef
 eval envRef (List [Atom "if", ifForm, thenForm, elseForm]) = do {
     ifBool <- eval envRef ifForm;
     case ifBool of
