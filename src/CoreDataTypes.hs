@@ -22,7 +22,8 @@ data LispVal = Atom String
              | Number Integer
              | Bool Bool
              | PrimitiveFunc ([LispVal] -> Throwable LispVal)
-             | Func { params :: [String], body :: [LispVal], closure :: EnvRef }
+             | Func { params :: [String], varargs :: Maybe String,
+                      body :: [LispVal], closure :: EnvRef }
 
 instance Show LispVal where show = showVal
 
@@ -35,8 +36,11 @@ showVal (Number n) = show n
 showVal (Bool True) = "#t"
 showVal (Bool False) = "#f"
 showVal (PrimitiveFunc _) = "<primitive>"
-showVal (Func {params=p, body=b, closure=e}) = 
-  "(lambda (" ++ unwords (map show p) ++ ") ...)"
+showVal (Func {params=p, varargs=v, body=b, closure=e}) = 
+  "(lambda (" ++ unwords (map show p) ++ 
+              (case v of
+                Nothing -> ""
+                Just x  -> " . " ++ x) ++ ") ...)"
 
 -- LispError
 data LispError = ParserError ParseError
