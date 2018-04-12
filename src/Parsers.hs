@@ -17,6 +17,7 @@ parseExpr = parseBool
         <|> parseAtom
         <|> parseListType
         <|> parseNumber
+        <|> parseQuoted
 
 symbol :: Parser Char
 symbol = oneOf "!#$%&|*+-/:<=>?@^_~"
@@ -62,3 +63,10 @@ parseTrue = string "#t" >> return (Bool True)
 
 parseFalse :: Parser LispVal
 parseFalse = string "#f" >> return (Bool False)
+
+parseQuoted :: Parser LispVal
+parseQuoted = do {
+    char '\'';
+    val <- parseExpr;
+    return $ List [Atom "quote", val]
+}
