@@ -27,7 +27,8 @@ primitives = [
   ("and", boolBoolBinOp (&&)),
   ("or", boolBoolBinOp (||)),
   ("car", car),
-  ("cdr", cdr)
+  ("cdr", cdr),
+  ("cons", cons)
   ]
 
 numBinOp :: (Integer -> Integer -> Integer) -> [LispVal] -> Throwable LispVal
@@ -64,3 +65,9 @@ cdr [DottedList [_] y] = return y
 cdr [DottedList (x:xs) y] = return $ DottedList xs y
 cdr [nonListType] = throwError $ TypeMismatch "Non-empty ListType" nonListType
 cdr badArgs = throwError $ NumArgError 1 badArgs
+
+cons :: [LispVal] -> Throwable LispVal
+cons [x, List xs] = return $ List (x:xs)
+cons [x, DottedList xs y] = return $ DottedList (x:xs) y
+cons [x, y] = return $ DottedList [x] y
+cons badArgs = throwError $ NumArgError 2 badArgs
