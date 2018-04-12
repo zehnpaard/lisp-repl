@@ -26,7 +26,8 @@ primitives = [
   ("<=", numBoolBinOp (<=)),
   ("and", boolBoolBinOp (&&)),
   ("or", boolBoolBinOp (||)),
-  ("car", car)
+  ("car", car),
+  ("cdr", cdr)
   ]
 
 numBinOp :: (Integer -> Integer -> Integer) -> [LispVal] -> Throwable LispVal
@@ -54,5 +55,12 @@ lvToBool notBool  = throwError $ TypeMismatch "Bool" notBool
 car :: [LispVal] -> Throwable LispVal
 car [List (x:xs)] = return x
 car [DottedList (x:xs) _] = return x
-car [nonListType] = throwError $ TypeMismatch "ListType" nonListType
+car [nonListType] = throwError $ TypeMismatch "Non-empty ListType" nonListType
 car badArgs = throwError $ NumArgError 1 badArgs
+
+cdr :: [LispVal] -> Throwable LispVal
+cdr [List (x:xs)] = return $ List xs
+cdr [DottedList [_] y] = return y
+cdr [DottedList (x:xs) y] = return $ DottedList xs y
+cdr [nonListType] = throwError $ TypeMismatch "Non-empty ListType" nonListType
+cdr badArgs = throwError $ NumArgError 1 badArgs
